@@ -48,7 +48,7 @@ export class ParkingLot {
     }
 
     private saveToStorage(): void {
-        localStorage.setItem("parkingLot", JSON.stringify(this));
+        localStorage.setItem("parkingLot", JSON.stringify({ cars: this.cars, maxCapacity: this.maxCapacity }));
     }
 
     private loadFromStorage(): void {

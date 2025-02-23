@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Panel</title>
+    <link rel="stylesheet" href="dist/main.css">
+    <script type="module" src="./dist/controlPanelController.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Control Panel</h1>
+        <button onclick="location.href='../index.html'">Back to Home</button>
+    </header>
+    <main>
+        <h2>Set Parking Capacity</h2>
+        <form id="capacityForm">
+            <label for="maxCapacity">Max Capacity:</label>
+            <input type="number" id="maxCapacity" min="1" required>
+            <button type="submit">Update</button>
+        </form>
+    </main>
+</body>
+</html>
