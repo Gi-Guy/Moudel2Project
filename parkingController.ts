@@ -1,5 +1,5 @@
-import { ParkingLot } from "../models/parkingLot";
-import { Car } from "../models/car";
+import { ParkingLot } from "./parkingLot.js";
+import { Car } from "./car.js";
 
 const parkingLot = new ParkingLot();
 

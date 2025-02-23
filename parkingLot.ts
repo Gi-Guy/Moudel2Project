@@ -1,49 +1,61 @@
-import { Car } from "./car";
+import { Car } from "./car.js";
+
 export class ParkingLot {
+    private cars: Car[] = [];
+    private maxCapacity: number = 50;
+
     constructor() {
-        this.cars = [];
-        this.maxCapacity = 50;
         this.loadFromStorage();
     }
-    addCar(car) {
+
+    addCar(car: Car): boolean {
         if (this.cars.length >= this.maxCapacity) {
             alert("Parking lot is full.");
             return false;
         }
+        
         const carExists = this.cars.some(existingCar => existingCar.getLicensePlate() === car.getLicensePlate());
         if (carExists) {
             alert("Car with this license plate already exists in the parking lot");
             return false;
         }
+
         this.cars.push(car);
         this.saveToStorage();
         return true;
     }
-    removeCar(licensePlate) {
+
+    removeCar(licensePlate: string): void {
         this.cars = this.cars.filter(car => car.getLicensePlate() !== licensePlate);
         this.saveToStorage();
     }
-    getCars() {
+
+    getCars(): Car[] {
         return this.cars;
     }
-    getAvailableSpots() {
+
+    getAvailableSpots(): number {
         return this.maxCapacity - this.cars.length;
     }
-    getMaxCapacity() {
+
+    getMaxCapacity(): number {
         return this.maxCapacity;
     }
-    setMaxCapacity(capacity) {
+
+    setMaxCapacity(capacity: number): void {
         this.maxCapacity = capacity;
         this.saveToStorage();
     }
-    saveToStorage() {
+
+    private saveToStorage(): void {
         localStorage.setItem("parkingLot", JSON.stringify(this));
     }
-    loadFromStorage() {
+
+    private loadFromStorage(): void {
         const data = localStorage.getItem("parkingLot");
         if (data) {
             const parsed = JSON.parse(data);
-            this.cars = parsed.cars.map((carData) => new Car(carData.licensePlate, carData.owner, carData.entryTime)) || [];
+            this.cars = parsed.cars.map((carData: any) => new Car(carData.licensePlate, carData.owner, carData.entryTime)) || [];
             this.maxCapacity = parsed.maxCapacity || 50;
         }
     }
