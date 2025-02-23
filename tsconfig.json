@@ -1,8 +1,20 @@
+// {
+//     "compilerOptions": {
+//         "noImplicitAny": true,
+//         "lib": ["DOM", "ESNext"],
+//         "target": "ESNext",
+//         "module": "ESNext"
+//     }
+// }
+
 {
-    "compilerOptions": {
-        "noImplicitAny": true,
-        "lib": ["DOM", "ESNext"],
-        "target": "ESNext",
-        "module": "ESNext"
-    }
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES6",
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "allowJs": true,
+    "strict": true,
+    "esModuleInterop": true
+  }
 }

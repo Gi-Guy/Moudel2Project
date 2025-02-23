@@ -1,25 +1,19 @@
-"use strict";
-exports.__esModule = true;
-exports.Car = void 0;
-var Car = /** @class */ (function () {
-    function Car(licensePlate, owner, entryTime) {
-        if (entryTime === void 0) { entryTime = new Date().toLocaleString("he-IL"); }
+export class Car {
+    constructor(licensePlate, owner, entryTime = new Date().toLocaleString("he-IL")) {
         this.licensePlate = licensePlate;
         this.owner = owner;
         this.entryTime = entryTime;
     }
-    Car.prototype.getLicensePlate = function () {
+    getLicensePlate() {
         return this.licensePlate;
-    };
-    Car.prototype.getOwner = function () {
+    }
+    getOwner() {
         return this.owner;
-    };
-    Car.prototype.getEntryTime = function () {
+    }
+    getEntryTime() {
         return this.entryTime;
-    };
-    Car.prototype.setentryTime = function (entryTime) {
+    }
+    setEntryTime(entryTime) {
         this.entryTime = entryTime;
-    };
-    return Car;
-}());
-exports.Car = Car;
+    }
+}

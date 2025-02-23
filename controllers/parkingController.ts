@@ -4,16 +4,20 @@ import { Car } from "../models/car";
 const parkingLot = new ParkingLot();
 
 export function addCarToParking(licensePlate: string, owner?: string): void {
+    console.log("Adding car:", licensePlate, owner);
+    
     const car = new Car(licensePlate, owner);
     if (parkingLot.addCar(car)) {
         alert("Car added successfully!");
-        updateUI();
+        renderCarList(); 
     }
 }
 
 export function removeCarFromParking(licensePlate: string): void {
+    console.log("Removing car:", licensePlate);
+    
     parkingLot.removeCar(licensePlate);
-    updateUI();
+    renderCarList();
 }
 
 export function getParkingInfo() {
@@ -24,27 +28,51 @@ export function getParkingInfo() {
     };
 }
 
-export function updateUI(): void {
+export function getCarList() {
+    return parkingLot.getCars().map(car => ({
+        licensePlate: car.getLicensePlate(),
+        owner: car.getOwner() || "Unknown",
+        entryTime: car.getEntryTime()
+    }));
+}
+
+export function renderCarList(): void {
+    console.log("Rendering car list...");
+    
     const info = getParkingInfo();
     document.getElementById("usedSlots")!.innerText = `${info.used}`;
     document.getElementById("availableSlots")!.innerText = `${info.available}`;
     document.getElementById("maxSlots")!.innerText = `${info.total}`;
     
-    const carList = document.getElementById("carList")!;
+    const carList = document.getElementById("carList");
+    if (!carList) {
+        console.error("Element #carList not found!");
+        return;
+    }
+
     carList.innerHTML = "";
-    parkingLot.getCars().forEach(car => {
+    
+    getCarList().forEach(car => {
         const li = document.createElement("li");
         li.innerHTML = `
-            <strong>${car.getLicensePlate()}</strong> - ${car.getOwner() || "Unknown"}
-            <br> <small>Entered: ${car.getEntryTime()}</small>
+            <strong>${car.licensePlate}</strong> - ${car.owner}
+            <br> <small>Entered: ${car.entryTime}</small>
         `;
         const removeButton = document.createElement("button");
         removeButton.innerText = "Remove";
-        removeButton.onclick = () => removeCarFromParking(car.getLicensePlate());
+        removeButton.onclick = () => removeCarFromParking(car.licensePlate);
         li.appendChild(removeButton);
         carList.appendChild(li);
     });
+
+    console.log("Car list rendered.");
 }
 
-// Ensure UI updates on page load
-window.addEventListener("load", updateUI);
+// Register `renderCarList()` to run automatically when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Document ready, rendering car list...");
+    renderCarList();
+});
+
+addCarToParking("123-ABC", "Alice");
+addCarToParking("456-DEF", "Bob");

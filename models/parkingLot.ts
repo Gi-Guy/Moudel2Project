@@ -55,7 +55,7 @@ export class ParkingLot {
         const data = localStorage.getItem("parkingLot");
         if (data) {
             const parsed = JSON.parse(data);
-            this.cars = parsed.cars || [];
+            this.cars = parsed.cars.map((carData: any) => new Car(carData.licensePlate, carData.owner, carData.entryTime)) || [];
             this.maxCapacity = parsed.maxCapacity || 50;
         }
     }

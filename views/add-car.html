@@ -17,11 +17,8 @@
             <label for="licensePlate">License Plate:</label>
             <input type="text" id="licensePlate" required>
             
-            <label for="owner">Owner Name:</label>
-            <input type="text" id="owner" required>
-            
-            <label for="type">Car Type:</label>
-            <input type="text" id="type" required>
+            <label for="owner">Owner Name (Optional):</label>
+            <input type="text" id="owner">
             
             <button type="submit">Add</button>
         </form>
@@ -30,15 +27,20 @@
     <script>
         document.getElementById("addCarForm").addEventListener("submit", function(event) {
             event.preventDefault();
-            const licensePlate = document.getElementById("licensePlate").value;
-            const owner = document.getElementById("owner").value;
-            const type = document.getElementById("type").value;
-            
-            if (window.addCarToParking) {
-                window.addCarToParking(licensePlate, owner, type);
+            const licensePlate = document.getElementById("licensePlate").value.trim();
+            const owner = document.getElementById("owner").value.trim() || undefined;
+
+            if (!licensePlate) {
+                alert("License Plate is required!");
+                return;
+            }
+
+            try {
+                addCarToParking(licensePlate, owner);
                 alert("Car added successfully!");
-                window.location.href = "index.html";
-            } else {
+                window.location.href = "../index.html";
+            } catch (error) {
+                console.error("Error adding car:", error);
                 alert("Error adding car, please try again.");
             }
         });

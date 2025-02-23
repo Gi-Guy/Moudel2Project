@@ -2,6 +2,10 @@
 $primary-font: Arial, sans-serif;
 $primary-bg-color: #f4f4f4;
 $text-color: #333;
+$button-bg-color: blue;
+$button-text-color: white;
+$button-padding: 10px 15px;
+$button-border-radius: 5px;
 
 // Global styles
 * {
@@ -37,10 +41,11 @@ main {
 }
 
 button {
-    padding: 10px 15px;
-    font-size: 16px;
+    background-color: $button-bg-color;
+    color: $button-text-color;
+    padding: $button-padding;
     border: none;
-    border-radius: 5px;
+    border-radius: $button-border-radius;
     cursor: pointer;
     transition: background-color 0.3s;
 }

@@ -1,20 +1,23 @@
-export class Car{
+export class Car {
     constructor(
         private licensePlate: string,
         private owner?: string,
-        private entryTime: string = new Date().toLocaleString("he-IL"),
-    ){
-    }
-    getLicensePlate(): string{
+        private entryTime: string = new Date().toLocaleString("he-IL")
+    ) {}
+
+    getLicensePlate(): string {
         return this.licensePlate;
     }
-    getOwner(): string{
+    
+    getOwner(): string | undefined {
         return this.owner;
     }
-    getEntryTime(): string{
+
+    getEntryTime(): string {
         return this.entryTime;
     }
-    setentryTime(entryTime: string){
+
+    setEntryTime(entryTime: string): void {
         this.entryTime = entryTime;
     }
 }
