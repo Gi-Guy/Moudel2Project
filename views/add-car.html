@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Car</title>
+    <link rel="stylesheet" href="../styles/dist/main.css">
+    <link rel="stylesheet" href="../styles/dist/add-car.css">
+    <script type="module" src="../controllers/dist/parkingController.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Add Car</h1>
+    </header>
+    <main>
+        <form id="addCarForm">
+            <label for="licensePlate">License Plate:</label>
+            <input type="text" id="licensePlate" required>
+            
+            <label for="owner">Owner Name:</label>
+            <input type="text" id="owner" required>
+            
+            <label for="type">Car Type:</label>
+            <input type="text" id="type" required>
+            
+            <button type="submit">Add</button>
+        </form>
+    </main>
+    
+    <script>
+        document.getElementById("addCarForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const licensePlate = document.getElementById("licensePlate").value;
+            const owner = document.getElementById("owner").value;
+            const type = document.getElementById("type").value;
+            
+            if (window.addCarToParking) {
+                window.addCarToParking(licensePlate, owner, type);
+                alert("Car added successfully!");
+                window.location.href = "index.html";
+            } else {
+                alert("Error adding car, please try again.");
+            }
+        });
+    </script>
+</body>
+</html>
