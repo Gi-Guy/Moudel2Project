@@ -6,7 +6,6 @@
     <title>Add Car</title>
     <link rel="stylesheet" href="dist/main.css">
     <link rel="stylesheet" href="dist/add-car.css">
-    <script type="module" src="dist/parkingController.js" defer></script>
 </head>
 <body>
     <header>
@@ -15,7 +14,7 @@
     <main>
         <form id="addCarForm">
             <label for="licensePlate">License Plate:</label>
-            <input type="text" id="licensePlate" required>
+            <input type="text" id="licensePlate" required autofocus>
             
             <label for="owner">Owner Name (Optional):</label>
             <input type="text" id="owner">
@@ -23,27 +22,43 @@
             <button type="submit">Add</button>
         </form>
     </main>
+    <script type="module">
+        import { addCarToParking } from "./dist/parkingController.js";
     
-    <script>
-        document.getElementById("addCarForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const licensePlate = document.getElementById("licensePlate").value.trim();
-            const owner = document.getElementById("owner").value.trim() || undefined;
-
-            if (!licensePlate) {
-                alert("License Plate is required!");
-                return;
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("add-car.html loaded, addCarToParking imported...");
+    
+            const form = document.getElementById("addCarForm");
+    
+            if (form.dataset.listenerAdded) {
+                return; 
             }
-
-            try {
-                addCarToParking(licensePlate, owner);
-                alert("Car added successfully!");
-                window.location.href = "../index.html";
-            } catch (error) {
-                console.error("Error adding car:", error);
-                alert("Error adding car, please try again.");
-            }
+            form.dataset.listenerAdded = "true";
+    
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+    
+                const licensePlate = document.getElementById("licensePlate").value.trim();
+                const owner = document.getElementById("owner").value.trim() || undefined;
+    
+                if (!licensePlate) {
+                    alert("License Plate is required!");
+                    return;
+                }
+    
+                try {
+                    addCarToParking(licensePlate, owner);
+                    setTimeout(() => {
+                        alert("Car added successfully!");
+                        location.href = "index.html";
+                    }, 50);
+                } catch (error) {
+                    console.error("Error adding car:", error);
+                    alert("Error adding car, please try again.");
+                }
+            });
         });
     </script>
+    
 </body>
 </html>

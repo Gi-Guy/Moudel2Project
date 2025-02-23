@@ -30,15 +30,18 @@ export function getCarList() {
 }
 export function renderCarList() {
     console.log("Rendering car list...");
-    const info = getParkingInfo();
-    document.getElementById("usedSlots").innerText = `${info.used}`;
-    document.getElementById("availableSlots").innerText = `${info.available}`;
-    document.getElementById("maxSlots").innerText = `${info.total}`;
+    const usedSlots = document.getElementById("usedSlots");
+    const availableSlots = document.getElementById("availableSlots");
+    const maxSlots = document.getElementById("maxSlots");
     const carList = document.getElementById("carList");
-    if (!carList) {
-        console.error("Element #carList not found!");
+    if (!usedSlots || !availableSlots || !maxSlots || !carList) {
+        console.warn("renderCarList() skipped: Elements not found (probably add-car.html)");
         return;
     }
+    const info = getParkingInfo();
+    usedSlots.innerText = `${info.used}`;
+    availableSlots.innerText = `${info.available}`;
+    maxSlots.innerText = `${info.total}`;
     carList.innerHTML = "";
     getCarList().forEach(car => {
         const li = document.createElement("li");
@@ -54,10 +57,7 @@ export function renderCarList() {
     });
     console.log("Car list rendered.");
 }
-// Register `renderCarList()` to run automatically when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Document ready, rendering car list...");
     renderCarList();
 });
-addCarToParking("123-ABC", "Alice");
-addCarToParking("456-DEF", "Bob");
