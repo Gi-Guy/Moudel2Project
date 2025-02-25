@@ -33,7 +33,6 @@ export function addSubscription(licensePlate, owner, months = 1) {
     try {
         if (subscriptions.addSubscription(licensePlate, owner, months)) {
             alert("Subscription added successfully!");
-            renderSubscriptionList(); // רענון התצוגה מיד לאחר הוספת מנוי
             updateSubscriptionStatus();
         }
     }
@@ -57,6 +56,7 @@ export function removeSubscription(licensePlate) {
     try {
         subscriptions.removeSubscription(licensePlate);
         alert("Subscription removed successfully!");
+        updateSubscriptionStatus();
     }
     catch (error) {
         console.error("Error removing subscription:", error);
@@ -89,19 +89,25 @@ export function getSubscriptionList() {
     }));
 }
 function updateSubscriptionStatus() {
-    const activeSubs = document.getElementById("activeSubs");
-    const inactiveSubs = document.getElementById("inactiveSubs");
-    const subscriptionList = document.getElementById("subscriptionList");
-    if (!activeSubs || !inactiveSubs || !subscriptionList) {
-        console.warn("Subscription status elements not found on this page. Skipping update.");
-        return;
+    try {
+        // const activeSubs = document.getElementById("activeSubs");
+        // const inactiveSubs = document.getElementById("inactiveSubs");
+        const subscriptionList = document.getElementById("subscriptionList");
+        //if (!activeSubs || !inactiveSubs || !subscriptionList) {
+        if (!subscriptionList) {
+            console.warn("Subscription status elements not found on this page. Skipping update.");
+            return;
+        }
+        const subs = getSubscriptionList();
+        const active = subs.filter(sub => sub.active);
+        const inactive = subs.filter(sub => !sub.active);
+        // activeSubs.textContent = active.length.toString();
+        // inactiveSubs.textContent = inactive.length.toString();
+        renderSubscriptionList();
     }
-    const subs = getSubscriptionList();
-    const active = subs.filter(sub => sub.active);
-    const inactive = subs.filter(sub => !sub.active);
-    activeSubs.textContent = active.length.toString();
-    inactiveSubs.textContent = inactive.length.toString();
-    renderSubscriptionList();
+    catch (error) {
+        console.error("Error updating subscription status:", error);
+    }
 }
 export function renderSubscriptionList() {
     try {

@@ -31,14 +31,13 @@
         <ul id="subscriptionList"></ul>
     </main>
     <script type="module">
-        import { addSubscription, renderSubscriptionList } from "./dist/parkingController.js";
+        import { addSubscription } from "./dist/parkingController.js";
     
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.getElementById("subscriptionForm");
             if (form) {
                 form.addEventListener("submit", (event) => {
-                    event.preventDefault(); 
-                    console.log("Form submitted! Processing subscription...");
+                    event.preventDefault();
     
                     const licensePlateInput = document.getElementById("licensePlate");
                     const ownerInput = document.getElementById("owner");
@@ -56,16 +55,15 @@
                     }
     
                     addSubscription(licensePlate, owner, months);
-                    renderSubscriptionList();
     
                     licensePlateInput.value = "";
                     ownerInput.value = "";
                     monthsInput.value = "1";
                 });
             }
-            renderSubscriptionList();
         });
     </script>
+    
     
 </body>
 </html>
