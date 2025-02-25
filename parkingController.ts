@@ -163,7 +163,7 @@ export function renderSubscriptionList(): void {
             activeBadge.innerText = sub.active ? "Active" : "Inactive";
 
             const removeButton = document.createElement("button");
-            removeButton.classList.add("remove");
+            removeButton.classList.add("remove-sub");
             removeButton.innerText = "Remove";
             removeButton.onclick = () => removeSubscription(sub.licensePlate);
 
