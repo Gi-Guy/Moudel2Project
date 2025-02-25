@@ -1,3 +1,4 @@
+//MODEL
 import { Subscription } from "./Subscription.js";
 export class Subscriptions {
     constructor() {
@@ -21,6 +22,12 @@ export class Subscriptions {
     removeSubscription(licensePlate) {
         this.subscriptions = this.subscriptions.filter(sub => sub.getLicensePlate() !== licensePlate);
         this.saveToStorage();
+    }
+    getSubscriptions() {
+        return this.subscriptions;
+    }
+    getActiveSubscriptions() {
+        return this.subscriptions.filter(sub => sub.isActive());
     }
     saveToStorage() {
         localStorage.setItem("subscriptions", JSON.stringify(this.subscriptions));
