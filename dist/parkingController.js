@@ -230,28 +230,8 @@ export function renderCarList() {
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("usedSlots")) {
         updateParkingStatus();
-        setInterval(updateParkingStatus, 10000);
     }
     if (document.getElementById("subscriptionList")) {
         updateSubscriptionStatus();
-        renderSubscriptionList();
     }
 });
-function handleAddSubscription() {
-    const licensePlateInput = document.getElementById("licensePlate");
-    const ownerInput = document.getElementById("owner");
-    const monthsInput = document.getElementById("months");
-    const licensePlate = licensePlateInput.value.trim();
-    const owner = ownerInput.value.trim();
-    const months = parseInt(monthsInput.value, 10);
-    if (!licensePlate || !owner || isNaN(months) || months < 1) {
-        alert("Please enter valid details for the subscription.");
-        return;
-    }
-    console.log("Adding subscription:", { licensePlate, owner, months });
-    addSubscription(licensePlate, owner, months);
-    // ניקוי הטופס אחרי הוספה
-    licensePlateInput.value = "";
-    ownerInput.value = "";
-    monthsInput.value = "1";
-}
