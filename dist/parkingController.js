@@ -51,6 +51,16 @@ export function removeCarFromParking(licensePlate) {
         alert("An error occurred while removing the car. Please try again.");
     }
 }
+export function removeSubscription(licensePlate) {
+    try {
+        subscriptions.removeSubscription(licensePlate);
+        alert("Subscription removed successfully!");
+    }
+    catch (error) {
+        console.error("Error removing subscription:", error);
+        alert("An error occurred while removing the subscription. Please try again.");
+    }
+}
 export function getParkingInfo() {
     return {
         total: parkingLot.getMaxCapacity(),

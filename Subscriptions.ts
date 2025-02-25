@@ -22,7 +22,8 @@ export class Subscriptions{
         return true;
     }
     removeSubscription(licensePlate: string): void{
-        
+        this.subscriptions = this.subscriptions.filter(sub => sub.getLicensePlate() !== licensePlate);
+        this.saveToStorage();
     }
     private saveToStorage(): void {
         localStorage.setItem("subscriptions", JSON.stringify(this.subscriptions));
