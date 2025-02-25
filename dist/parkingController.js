@@ -138,12 +138,12 @@ export function renderSubscriptionList() {
             endDate.innerText = `End Date: ${sub.endDate}`;
             const monthlyFee = document.createElement("span");
             monthlyFee.classList.add("monthly-fee");
-            monthlyFee.innerText = `Monthly Fee: $${sub.monthlyFee}`;
+            monthlyFee.innerText = `Total payment: $${sub.monthlyFee}`;
             const activeBadge = document.createElement("span");
             activeBadge.classList.add("active-badge");
             activeBadge.innerText = sub.active ? "Active" : "Inactive";
             const removeButton = document.createElement("button");
-            removeButton.classList.add("remove-sub");
+            removeButton.classList.add("remove");
             removeButton.innerText = "Remove";
             removeButton.onclick = () => removeSubscription(sub.licensePlate);
             subMeta.appendChild(startDate);
