@@ -1,7 +1,9 @@
 import { ParkingLot } from "./parkingLot.js";
 import { Car } from "./car.js";
+import { Subscriptions } from "./Subscriptions.js";  
 
 const parkingLot = new ParkingLot();
+const subscriptions = new Subscriptions();
 const HOURLY_RATE = 5;
 
 export function addCarToParking(licensePlate: string, owner?: string): boolean {
@@ -29,6 +31,19 @@ export function calculateParkingFee(entryTime: string): number {
     const now = new Date();
     const diffInHours = Math.ceil((now.getTime() - entryDate.getTime()) / (1000 * 60 * 60));
     return diffInHours * HOURLY_RATE;
+}
+
+export function addSubscription(licensePlate: string, owner?: string, months: number = 1):void{
+    try{
+        if(subscriptions.addSubscription(licensePlate, owner, months)){
+            alert("Subscriptions added successfully!");
+            
+        }
+
+    } catch(error){
+        console.error("Error adding sub subscription", error);
+        alert("An error occurred while adding the subscription. Please try again.");
+    }
 }
 
 export function removeCarFromParking(licensePlate: string): void {
