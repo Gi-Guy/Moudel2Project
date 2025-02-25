@@ -2,7 +2,7 @@ export class Car {
     constructor(
         private licensePlate: string,
         private owner?: string,
-        private entryTime: string = new Date().toLocaleString("he-IL")
+        private entryTime: string = new Date().toISOString()
     ) {}
 
     getLicensePlate(): string {
@@ -18,6 +18,6 @@ export class Car {
     }
 
     setEntryTime(entryTime: string): void {
-        this.entryTime = entryTime;
+        this.entryTime = new Date(entryTime).toISOString();
     }
 }

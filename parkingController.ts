@@ -2,6 +2,7 @@ import { ParkingLot } from "./parkingLot.js";
 import { Car } from "./car.js";
 
 const parkingLot = new ParkingLot();
+const HOURLY_RATE = 5;
 
 export function addCarToParking(licensePlate: string, owner?: string): boolean {
     try {
@@ -23,6 +24,12 @@ export function addCarToParking(licensePlate: string, owner?: string): boolean {
     return false;
 }
 
+export function calculateParkingFee(entryTime: string): number {
+    const entryDate = new Date(entryTime);
+    const now = new Date();
+    const diffInHours = Math.ceil((now.getTime() - entryDate.getTime()) / (1000 * 60 * 60));
+    return diffInHours * HOURLY_RATE;
+}
 
 export function removeCarFromParking(licensePlate: string): void {
     try {
@@ -47,7 +54,8 @@ export function getCarList() {
     return parkingLot.getCars().map(car => ({
         licensePlate: car.getLicensePlate(),
         owner: car.getOwner() || "Unknown",
-        entryTime: car.getEntryTime()
+        entryTime: car.getEntryTime(),
+        feeDue: calculateParkingFee(car.getEntryTime())
     }));
 }
 
@@ -109,12 +117,17 @@ export function renderCarList(): void {
             entryTime.classList.add("entry-time");
             entryTime.innerText = `Entered: ${car.entryTime}`;
 
+            const feeDue = document.createElement("span");
+            feeDue.classList.add("fee-due");
+            feeDue.innerText = `Amount Due: $${car.feeDue}`;
+
             const removeButton = document.createElement("button");
             removeButton.classList.add("remove-car");
             removeButton.innerText = "Remove";
             removeButton.onclick = () => removeCarFromParking(car.licensePlate);
 
             carMeta.appendChild(entryTime);
+            carMeta.appendChild(feeDue);
             carMeta.appendChild(removeButton);
 
             li.appendChild(carInfo);
