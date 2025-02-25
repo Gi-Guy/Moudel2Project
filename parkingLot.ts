@@ -3,12 +3,18 @@ import { Car } from "./car.js";
 export class ParkingLot {
     private cars: Car[] = [];
     private maxCapacity: number = 50;
+    private openingTime: string = "08:30";
+    private closingTime: string = "23:00";
 
     constructor() {
         this.loadFromStorage();
     }
 
     addCar(car: Car): boolean {
+        if (!this.iswithinOperatingHours()) {
+            alert("Parking lot is closed.");
+            return false;
+        }
         if (this.cars.length >= this.maxCapacity) {
             alert("Parking lot is full.");
             return false;
@@ -46,9 +52,27 @@ export class ParkingLot {
         this.maxCapacity = capacity;
         this.saveToStorage();
     }
+    getOpeningTime(): string {
+        return this.openingTime;
+    }
+    getClosingTime(): string {
+        return this.closingTime;
+    }
+    setOperatingHours(openingTime: string, closingTime: string): void {
+        this.openingTime = openingTime;
+        this.closingTime = closingTime;
+        this.saveToStorage();
+    }
+    iswithinOperatingHours(): boolean {
+        const now = new Date();
+        const currentTime = `${now.getHours()}:${now.getMinutes()}`;
+        return currentTime >= this.openingTime && currentTime <= this.closingTime;
+    }
 
     private saveToStorage(): void {
-        localStorage.setItem("parkingLot", JSON.stringify({ cars: this.cars, maxCapacity: this.maxCapacity }));
+        localStorage.setItem("parkingLot", JSON.stringify({ cars: this.cars, maxCapacity: this.maxCapacity
+            , openingTime: this.openingTime, closingTime: this.closingTime
+         }));
     }
 
     private loadFromStorage(): void {
@@ -57,6 +81,8 @@ export class ParkingLot {
             const parsed = JSON.parse(data);
             this.cars = parsed.cars.map((carData: any) => new Car(carData.licensePlate, carData.owner, carData.entryTime)) || [];
             this.maxCapacity = parsed.maxCapacity || 50;
+            this.openingTime = parsed.openingTime || "08:30";
+            this.closingTime = parsed.closingTime || "23:00";
         }
     }
 }

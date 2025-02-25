@@ -5,6 +5,11 @@ const parkingLot = new ParkingLot();
 
 export function addCarToParking(licensePlate: string, owner?: string): boolean {
     try {
+        if (!parkingLot.iswithinOperatingHours()) {
+            alert("Parking is closed. You cannot add cars at this time.");
+            return false;
+        }
+
         const car = new Car(licensePlate, owner);
         if (parkingLot.addCar(car)) {
             alert("Car added successfully!");
@@ -17,6 +22,7 @@ export function addCarToParking(licensePlate: string, owner?: string): boolean {
     }
     return false;
 }
+
 
 export function removeCarFromParking(licensePlate: string): void {
     try {
@@ -50,8 +56,11 @@ function updateParkingStatus(): void {
         const usedSlots = document.getElementById("usedSlots");
         const availableSlots = document.getElementById("availableSlots");
         const carList = document.getElementById("carList");
+        const maxCapacity = document.getElementById("maxCapacity");
+        const openingTime = document.getElementById("openingTime");
+        const closingTime = document.getElementById("closingTime");
         
-        if (!usedSlots || !availableSlots || !carList) {
+        if (!usedSlots || !availableSlots || !carList || !openingTime || !closingTime || !maxCapacity) {
             console.error("Parking status elements not found!");
             return;
         }
@@ -59,6 +68,9 @@ function updateParkingStatus(): void {
         const info = getParkingInfo();
         usedSlots.textContent = info.used.toString();
         availableSlots.textContent = info.available.toString();
+        maxCapacity.textContent = info.total.toString();
+        openingTime.textContent = parkingLot.getOpeningTime();
+        closingTime.textContent = parkingLot.getClosingTime();
         
         renderCarList();
     } catch (error) {

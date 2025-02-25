@@ -3,6 +3,10 @@ import { Car } from "./car.js";
 const parkingLot = new ParkingLot();
 export function addCarToParking(licensePlate, owner) {
     try {
+        if (!parkingLot.iswithinOperatingHours()) {
+            alert("Parking is closed. You cannot add cars at this time.");
+            return false;
+        }
         const car = new Car(licensePlate, owner);
         if (parkingLot.addCar(car)) {
             alert("Car added successfully!");
@@ -46,13 +50,19 @@ function updateParkingStatus() {
         const usedSlots = document.getElementById("usedSlots");
         const availableSlots = document.getElementById("availableSlots");
         const carList = document.getElementById("carList");
-        if (!usedSlots || !availableSlots || !carList) {
+        const maxCapacity = document.getElementById("maxCapacity");
+        const openingTime = document.getElementById("openingTime");
+        const closingTime = document.getElementById("closingTime");
+        if (!usedSlots || !availableSlots || !carList || !openingTime || !closingTime || !maxCapacity) {
             console.error("Parking status elements not found!");
             return;
         }
         const info = getParkingInfo();
         usedSlots.textContent = info.used.toString();
         availableSlots.textContent = info.available.toString();
+        maxCapacity.textContent = info.total.toString();
+        openingTime.textContent = parkingLot.getOpeningTime();
+        closingTime.textContent = parkingLot.getClosingTime();
         renderCarList();
     }
     catch (error) {
