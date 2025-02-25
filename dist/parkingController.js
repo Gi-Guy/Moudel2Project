@@ -90,18 +90,18 @@ export function getSubscriptionList() {
 }
 function updateSubscriptionStatus() {
     try {
-        // const activeSubs = document.getElementById("activeSubs");
+        const activeSubs = document.getElementById("activeSubs");
         // const inactiveSubs = document.getElementById("inactiveSubs");
         const subscriptionList = document.getElementById("subscriptionList");
         //if (!activeSubs || !inactiveSubs || !subscriptionList) {
-        if (!subscriptionList) {
+        if (!activeSubs || !subscriptionList) {
             console.warn("Subscription status elements not found on this page. Skipping update.");
             return;
         }
         const subs = getSubscriptionList();
         const active = subs.filter(sub => sub.active);
         const inactive = subs.filter(sub => !sub.active);
-        // activeSubs.textContent = active.length.toString();
+        activeSubs.textContent = active.length.toString();
         // inactiveSubs.textContent = inactive.length.toString();
         renderSubscriptionList();
     }
