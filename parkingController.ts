@@ -3,21 +3,30 @@ import { Car } from "./car.js";
 
 const parkingLot = new ParkingLot();
 
-export function addCarToParking(licensePlate: string, owner?: string): void {
-    console.log("Adding car:", licensePlate, owner);
-    
-    const car = new Car(licensePlate, owner);
-    if (parkingLot.addCar(car)) {
-        alert("Car added successfully!");
-        renderCarList(); 
+export function addCarToParking(licensePlate: string, owner?: string): boolean {
+    try {
+        const car = new Car(licensePlate, owner);
+        if (parkingLot.addCar(car)) {
+            alert("Car added successfully!");
+            updateParkingStatus();
+            return true;
+        }
+    } catch (error) {
+        console.error("Error adding car:", error);
+        alert("An error occurred while adding the car. Please try again.");
     }
+    return false;
 }
 
 export function removeCarFromParking(licensePlate: string): void {
-    console.log("Removing car:", licensePlate);
-    
-    parkingLot.removeCar(licensePlate);
-    renderCarList();
+    try {
+        parkingLot.removeCar(licensePlate);
+        alert("Car removed successfully!");
+        updateParkingStatus();
+    } catch (error) {
+        console.error("Error removing car:", error);
+        alert("An error occurred while removing the car. Please try again.");
+    }
 }
 
 export function getParkingInfo() {
@@ -36,42 +45,75 @@ export function getCarList() {
     }));
 }
 
-export function renderCarList(): void {
-    console.log("Rendering car list...");
-
-    const usedSlots = document.getElementById("usedSlots");
-    const availableSlots = document.getElementById("availableSlots");
-    const maxSlots = document.getElementById("maxSlots");
-    const carList = document.getElementById("carList");
-
-    if (!usedSlots || !availableSlots || !maxSlots || !carList) {
-        console.warn("renderCarList() skipped: Elements not found (probably add-car.html)");
-        return;
+function updateParkingStatus(): void {
+    try {
+        const usedSlots = document.getElementById("usedSlots");
+        const availableSlots = document.getElementById("availableSlots");
+        const carList = document.getElementById("carList");
+        
+        if (!usedSlots || !availableSlots || !carList) {
+            console.error("Parking status elements not found!");
+            return;
+        }
+        
+        const info = getParkingInfo();
+        usedSlots.textContent = info.used.toString();
+        availableSlots.textContent = info.available.toString();
+        
+        renderCarList();
+    } catch (error) {
+        console.error("Error updating parking status:", error);
     }
+}
 
-    const info = getParkingInfo();
-    usedSlots.innerText = `${info.used}`;
-    availableSlots.innerText = `${info.available}`;
-    maxSlots.innerText = `${info.total}`;
+export function renderCarList(): void {
+    try {
+        const carList = document.getElementById("carList");
+        if (!carList) {
+            console.error("Element #carList not found!");
+            return;
+        }
+        
+        carList.innerHTML = "";
+        
+        const cars = getCarList();
+        if (cars.length === 0) {
+            carList.innerHTML = "<li>No cars in the parking lot.</li>";
+            return;
+        }
+        
+        cars.forEach(car => {
+            const li = document.createElement("li");
+            li.classList.add("car-item");
 
-    carList.innerHTML = "";
-    getCarList().forEach(car => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-            <strong>${car.licensePlate}</strong> - ${car.owner}
-            <br> <small>Entered: ${car.entryTime}</small>
-        `;
-        const removeButton = document.createElement("button");
-        removeButton.innerText = "Remove";
-        removeButton.onclick = () => removeCarFromParking(car.licensePlate);
-        li.appendChild(removeButton);
-        carList.appendChild(li);
-    });
+            const carInfo = document.createElement("div");
+            carInfo.classList.add("car-info");
+            carInfo.innerHTML = `<strong>${car.licensePlate}</strong> - ${car.owner}`;
 
-    console.log("Car list rendered.");
+            const carMeta = document.createElement("div");
+            carMeta.classList.add("car-meta");
+
+            const entryTime = document.createElement("span");
+            entryTime.classList.add("entry-time");
+            entryTime.innerText = `Entered: ${car.entryTime}`;
+
+            const removeButton = document.createElement("button");
+            removeButton.classList.add("remove-car");
+            removeButton.innerText = "Remove";
+            removeButton.onclick = () => removeCarFromParking(car.licensePlate);
+
+            carMeta.appendChild(entryTime);
+            carMeta.appendChild(removeButton);
+
+            li.appendChild(carInfo);
+            li.appendChild(carMeta);
+            carList.appendChild(li);
+        });
+    } catch (error) {
+        console.error("Error rendering car list:", error);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Document ready, rendering car list...");
-    renderCarList();
+    updateParkingStatus();
 });

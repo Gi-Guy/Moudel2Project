@@ -47,11 +47,10 @@
                 }
     
                 try {
-                    addCarToParking(licensePlate, owner);
-                    setTimeout(() => {
-                        alert("Car added successfully!");
-                        location.href = "index.html";
-                    }, 50);
+                    const success = addCarToParking(licensePlate, owner);
+                    if (success) {
+                        location.href = "index.html"; // מעבר רק אם הרכב נוסף בהצלחה
+                    }
                 } catch (error) {
                     console.error("Error adding car:", error);
                     alert("Error adding car, please try again.");
@@ -59,6 +58,7 @@
             });
         });
     </script>
+    
     
 </body>
 </html>
