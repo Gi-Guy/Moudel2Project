@@ -33,14 +33,15 @@ export function calculateParkingFee(entryTime: string): number {
     return diffInHours * HOURLY_RATE;
 }
 
-export function addSubscription(licensePlate: string, owner?: string, months: number = 1):void{
-    try{
-        if(subscriptions.addSubscription(licensePlate, owner, months)){
-            alert("Subscriptions added successfully!");
+export function addSubscription(licensePlate: string, owner?: string, months: number = 1): void {
+    try {
+        if (subscriptions.addSubscription(licensePlate, owner, months)) {
+            alert("Subscription added successfully!");
+            renderSubscriptionList(); // רענון התצוגה מיד לאחר הוספת מנוי
+            updateSubscriptionStatus();
         }
-
-    } catch(error){
-        console.error("Error adding sub subscription", error);
+    } catch (error) {
+        console.error("Error adding subscription", error);
         alert("An error occurred while adding the subscription. Please try again.");
     }
 }
@@ -82,7 +83,99 @@ export function getCarList() {
         feeDue: calculateParkingFee(car.getEntryTime())
     }));
 }
+export function getSubscriptionList() {
+    return subscriptions.getSubscriptions().map(sub => ({
+        licensePlate: sub.getLicensePlate(),
+        owner: sub.getOwner() || "Unknown",
+        startDate: sub.getStartDate(),
+        endDate: sub.getEndDate(),
+        monthlyFee: sub.getMonthlyFee(),
+        active: sub.isActive()
+    }));
+}
+function updateSubscriptionStatus(): void {
+    const activeSubs = document.getElementById("activeSubs");
+    const inactiveSubs = document.getElementById("inactiveSubs");
+    const subscriptionList = document.getElementById("subscriptionList");
 
+    if (!activeSubs || !inactiveSubs || !subscriptionList) {
+        console.warn("Subscription status elements not found on this page. Skipping update.");
+        return;
+    }
+
+    const subs = getSubscriptionList();
+    const active = subs.filter(sub => sub.active);
+    const inactive = subs.filter(sub => !sub.active);
+
+    activeSubs.textContent = active.length.toString();
+    inactiveSubs.textContent = inactive.length.toString();
+
+    renderSubscriptionList();
+}
+
+export function renderSubscriptionList(): void {
+    try {
+        const subscriptionList = document.getElementById("subscriptionList");
+        if (!subscriptionList) {
+            console.error("Element #subscriptionList not found!");
+            return;
+        }
+        
+        subscriptionList.innerHTML = "";
+        
+        const subs = getSubscriptionList();
+        if (subs.length === 0) {
+            subscriptionList.innerHTML = "<li>No subscriptions found.</li>";
+            return;
+        }
+        
+        subs.forEach(sub => {
+            const li = document.createElement("li");
+            li.classList.add("sub-item");
+
+            const subInfo = document.createElement("div");
+            subInfo.classList.add("sub-info");
+            subInfo.innerHTML = `<strong>${sub.licensePlate}</strong> - ${sub.owner}`;
+
+            const subMeta = document.createElement("div");
+            subMeta.classList.add("sub-meta");
+
+            const startDate = document.createElement("span");
+            startDate.classList.add("start-date");
+            startDate.innerText = `Start Date: ${sub.startDate}`;
+
+            const endDate = document.createElement("span");
+            endDate.classList.add("end-date");
+            endDate.innerText = `End Date: ${sub.endDate}`;
+
+            const monthlyFee = document.createElement("span");
+            monthlyFee.classList.add("monthly-fee");
+            monthlyFee.innerText = `Monthly Fee: $${sub.monthlyFee}`;
+
+            const activeBadge = document.createElement("span");
+            activeBadge.classList.add("active-badge");
+            activeBadge.innerText = sub.active ? "Active" : "Inactive";
+
+            const removeButton = document.createElement("button");
+            removeButton.classList.add("remove-sub");
+            removeButton.innerText = "Remove";
+            removeButton.onclick = () => removeSubscription(sub.licensePlate);
+
+            subMeta.appendChild(startDate);
+            subMeta.appendChild(endDate);
+            subMeta.appendChild(monthlyFee);
+            subMeta.appendChild(activeBadge);
+            subMeta.appendChild(removeButton);
+
+            li.appendChild(subInfo);
+            li.appendChild(subMeta);
+            subscriptionList.appendChild(li);
+        });
+    } catch (error) {
+        console.error("Error rendering subscription list:", error);
+    }
+    
+}
 function updateParkingStatus(): void {
     try {
         const usedSlots = document.getElementById("usedSlots");
@@ -97,7 +190,7 @@ function updateParkingStatus(): void {
             return;
         }
         
-        const info = getParkingInfo();
+        const info = getParkingInfo();//<------FIX THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         usedSlots.textContent = info.used.toString();
         availableSlots.textContent = info.available.toString();
         maxCapacity.textContent = info.total.toString();
@@ -163,6 +256,39 @@ export function renderCarList(): void {
     }
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
-    updateParkingStatus();
+    if (document.getElementById("usedSlots")) {
+        updateParkingStatus();
+        setInterval(updateParkingStatus, 10000);
+    }
+
+    if (document.getElementById("subscriptionList")) {
+        updateSubscriptionStatus();
+        renderSubscriptionList();
+    }
 });
+
+function handleAddSubscription(): void {
+    const licensePlateInput = document.getElementById("licensePlate") as HTMLInputElement;
+    const ownerInput = document.getElementById("owner") as HTMLInputElement;
+    const monthsInput = document.getElementById("months") as HTMLInputElement;
+
+    const licensePlate = licensePlateInput.value.trim();
+    const owner = ownerInput.value.trim();
+    const months = parseInt(monthsInput.value, 10);
+
+    if (!licensePlate || !owner || isNaN(months) || months < 1) {
+        alert("Please enter valid details for the subscription.");
+        return;
+    }
+
+    console.log("Adding subscription:", { licensePlate, owner, months });
+
+    addSubscription(licensePlate, owner, months);
+
+    // ניקוי הטופס אחרי הוספה
+    licensePlateInput.value = "";
+    ownerInput.value = "";
+    monthsInput.value = "1";
+}

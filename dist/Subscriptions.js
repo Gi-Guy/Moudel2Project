@@ -6,7 +6,7 @@ export class Subscriptions {
         this.loadFromStorage();
     }
     addSubscription(licensePlate, owner, months = 1) {
-        const alreadyExists = this.subscriptions.some(existingSub => existingSub.getLicensePlate() === subscription.getLicensePlate());
+        const alreadyExists = this.subscriptions.some(existingSub => existingSub.getLicensePlate() === licensePlate);
         if (alreadyExists) {
             alert("Car already has a subscription!");
             return false;

@@ -3,9 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Manage Subscriptions</title>
+    <link rel="stylesheet" href="dist/main.css">
+    <script type="module" src="dist/Subscriptions.js" defer></script>
 </head>
 <body>
-    <h1>HEY!</h1>
+    <header>
+        <h1>Manage Parking Subscriptions</h1>
+        <button onclick="location.href='index.html'">Back to Home</button>
+    </header>
+    <main>
+        <h2>Add Subscription</h2>
+        <form id="subscriptionForm">
+            <label for="licensePlate">License Plate:</label>
+            <input type="text" id="licensePlate" required>
+
+            <label for="owner">Owner:</label>
+            <input type="text" id="owner" required>
+
+            <label for="months">Subscription Duration (Months):</label>
+            <input type="number" id="months" min="1" value="1" required>
+
+            <button type="submit">Add Subscription</button>
+        </form>
+
+        <h2>Active Subscriptions</h2>
+        <ul id="subscriptionList"></ul>
+    </main>
+    <script type="module">
+        import { addSubscription, renderSubscriptionList } from "./dist/parkingController.js";
+    
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("subscriptionForm");
+            if (form) {
+                form.addEventListener("submit", (event) => {
+                    event.preventDefault(); 
+                    console.log("Form submitted! Processing subscription...");
+    
+                    const licensePlateInput = document.getElementById("licensePlate");
+                    const ownerInput = document.getElementById("owner");
+                    const monthsInput = document.getElementById("months");
+    
+                    if (!licensePlateInput || !ownerInput || !monthsInput) return;
+    
+                    const licensePlate = licensePlateInput.value.trim();
+                    const owner = ownerInput.value.trim();
+                    const months = parseInt(monthsInput.value, 10);
+    
+                    if (!licensePlate || !owner || isNaN(months) || months < 1) {
+                        alert("Please enter valid details for the subscription.");
+                        return;
+                    }
+    
+                    addSubscription(licensePlate, owner, months);
+                    renderSubscriptionList();
+    
+                    licensePlateInput.value = "";
+                    ownerInput.value = "";
+                    monthsInput.value = "1";
+                });
+            }
+            renderSubscriptionList();
+        });
+    </script>
+    
 </body>
 </html>
