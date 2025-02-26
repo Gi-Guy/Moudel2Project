@@ -19,9 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("entryTime").textContent = car.entryTime;
     document.getElementById("paymentAmount").textContent = `$${car.feeDue}`;
 
+    const entryDate = new Date(car.entryTime);
+    const now = new Date();
+    const diffMs = now.getTime() - entryDate.getTime();
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    document.getElementById("timeParked").textContent = `${hours}h ${minutes}m`;
+
     document.getElementById("paymentForm").addEventListener("submit", (event) => {
         event.preventDefault();
-
         const paymentData = {
             licensePlate: car.licensePlate,
             amountPaid: car.feeDue,
@@ -37,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
         location.href = "index.html";
     });
 });
-
 function savePaymentToStorage(paymentData: any): void {
     const payments = JSON.parse(localStorage.getItem("payments") || "[]");
     payments.push(paymentData);
