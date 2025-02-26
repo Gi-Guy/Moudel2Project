@@ -281,7 +281,7 @@ export function renderCarList(): void {
                 
                 const buttonContainer = document.createElement("div");
                 buttonContainer.style.display = "flex";
-                buttonContainer.style.gap = "8px";
+                buttonContainer.style.gap = "0.3rem";
 
                 buttonContainer.appendChild(payButton);
                 buttonContainer.appendChild(removeButton);

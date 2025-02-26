@@ -241,7 +241,7 @@ export function renderCarList() {
                 payButton.onclick = () => goToPayment(car.licensePlate);
                 const buttonContainer = document.createElement("div");
                 buttonContainer.style.display = "flex";
-                buttonContainer.style.gap = "8px";
+                buttonContainer.style.gap = "0.3rem";
                 buttonContainer.appendChild(payButton);
                 buttonContainer.appendChild(removeButton);
                 carMeta.appendChild(buttonContainer);
