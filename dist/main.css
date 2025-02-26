@@ -3,6 +3,7 @@
   --background-color: #f4f4f4;
   --text-color: #333;
   --button-bg: blue;
+  --button-payment-bg: green;
   --button-hover-bg: #2980b9;
   --input-border: #ccc;
   --form-bg: #f8f9fa;
@@ -110,6 +111,19 @@ button:hover {
   cursor: pointer;
   transition: background 0.3s;
   align-self: flex-end;
+}
+
+.pay-car {
+  background-color: var(--button-payment-bg);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  align-self: flex-end;
+  margin-right: auto;
 }
 
 .remove-car:hover {

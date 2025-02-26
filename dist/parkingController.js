@@ -234,7 +234,21 @@ export function renderCarList() {
             removeButton.onclick = () => removeCarFromParking(car.licensePlate);
             carMeta.appendChild(entryTime);
             carMeta.appendChild(feeDue);
-            carMeta.appendChild(removeButton);
+            if (car.feeDue > 0) {
+                const payButton = document.createElement("button");
+                payButton.classList.add("pay-car");
+                payButton.innerText = "Payment";
+                payButton.onclick = () => goToPayment(car.licensePlate);
+                const buttonContainer = document.createElement("div");
+                buttonContainer.style.display = "flex";
+                buttonContainer.style.gap = "8px";
+                buttonContainer.appendChild(payButton);
+                buttonContainer.appendChild(removeButton);
+                carMeta.appendChild(buttonContainer);
+            }
+            else {
+                carMeta.appendChild(removeButton);
+            }
             li.appendChild(carInfo);
             li.appendChild(carMeta);
             carList.appendChild(li);
@@ -243,6 +257,10 @@ export function renderCarList() {
     catch (error) {
         console.error("Error rendering car list:", error);
     }
+}
+function goToPayment(licensePlate) {
+    localStorage.setItem("selectedCar", licensePlate);
+    location.href = "payment.html";
 }
 setInterval(updateTimeAndStatus, 1000);
 document.addEventListener("DOMContentLoaded", () => {

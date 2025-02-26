@@ -272,7 +272,23 @@ export function renderCarList(): void {
 
             carMeta.appendChild(entryTime);
             carMeta.appendChild(feeDue);
-            carMeta.appendChild(removeButton);
+
+            if (car.feeDue > 0) {
+                const payButton = document.createElement("button");
+                payButton.classList.add("pay-car");
+                payButton.innerText = "Payment";
+                payButton.onclick = () => goToPayment(car.licensePlate);
+                
+                const buttonContainer = document.createElement("div");
+                buttonContainer.style.display = "flex";
+                buttonContainer.style.gap = "8px";
+
+                buttonContainer.appendChild(payButton);
+                buttonContainer.appendChild(removeButton);
+                carMeta.appendChild(buttonContainer);
+            } else {
+                carMeta.appendChild(removeButton);
+            }
 
             li.appendChild(carInfo);
             li.appendChild(carMeta);
@@ -281,6 +297,11 @@ export function renderCarList(): void {
     } catch (error) {
         console.error("Error rendering car list:", error);
     }
+}
+
+function goToPayment(licensePlate: string) {
+    localStorage.setItem("selectedCar", licensePlate);
+    location.href = "payment.html";
 }
 
 
