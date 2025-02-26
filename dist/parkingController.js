@@ -63,6 +63,14 @@ export function removeSubscription(licensePlate) {
         alert("An error occurred while removing the subscription. Please try again.");
     }
 }
+function updateTimeAndStatus() {
+    const now = new Date();
+    document.getElementById("currentTime").textContent = now.toLocaleTimeString();
+    const isOpen = parkingLot.iswithinOperatingHours();
+    const statusEl = document.getElementById("parkingStatus");
+    statusEl.textContent = isOpen ? "OPEN" : "CLOSED";
+    statusEl.style.color = isOpen ? "green" : "red";
+}
 export function getParkingInfo() {
     return {
         total: parkingLot.getMaxCapacity(),
@@ -204,7 +212,7 @@ export function renderCarList() {
             const li = document.createElement("li");
             li.classList.add("car-item");
             if (car.feeDue === 0) {
-                li.classList.add("subscribed-car"); // הוספת מחלקה לרכבים מנויים
+                li.classList.add("subscribed-car");
             }
             const carInfo = document.createElement("div");
             carInfo.classList.add("car-info");
@@ -236,6 +244,7 @@ export function renderCarList() {
         console.error("Error rendering car list:", error);
     }
 }
+setInterval(updateTimeAndStatus, 1000);
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("usedSlots")) {
         updateParkingStatus();
@@ -244,3 +253,4 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSubscriptionStatus();
     }
 });
+document.addEventListener("DOMContentLoaded", updateTimeAndStatus);
