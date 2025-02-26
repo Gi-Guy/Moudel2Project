@@ -330,8 +330,6 @@ function goToPayment(licensePlate: string) {
     location.href = "payment.html";
 }
 
-
-
 setInterval(updateTimeAndStatus, 1000);
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("usedSlots")) {
