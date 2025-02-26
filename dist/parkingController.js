@@ -211,6 +211,13 @@ export function renderCarList() {
         cars.forEach(car => {
             const li = document.createElement("li");
             li.classList.add("car-item");
+            li.setAttribute("draggable", "true");
+            li.addEventListener("dragstart", () => {
+                li.classList.add("dragging");
+            });
+            li.addEventListener("dragend", () => {
+                li.classList.remove("dragging");
+            });
             if (car.feeDue === 0) {
                 li.classList.add("subscribed-car");
             }
@@ -228,35 +235,50 @@ export function renderCarList() {
             const feeDue = document.createElement("span");
             feeDue.classList.add("fee-due");
             feeDue.innerText = `Amount Due: $${car.feeDue}`;
-            const removeButton = document.createElement("button");
-            removeButton.classList.add("remove-car");
-            removeButton.innerText = "Remove";
-            removeButton.onclick = () => removeCarFromParking(car.licensePlate);
-            carMeta.appendChild(entryTime);
-            carMeta.appendChild(feeDue);
+            const buttonContainer = document.createElement("div");
+            buttonContainer.classList.add("button-container");
             if (car.feeDue > 0) {
                 const payButton = document.createElement("button");
                 payButton.classList.add("pay-car");
                 payButton.innerText = "Payment";
                 payButton.onclick = () => goToPayment(car.licensePlate);
-                const buttonContainer = document.createElement("div");
-                buttonContainer.style.display = "flex";
-                buttonContainer.style.gap = "0.3rem";
                 buttonContainer.appendChild(payButton);
-                buttonContainer.appendChild(removeButton);
-                carMeta.appendChild(buttonContainer);
             }
-            else {
-                carMeta.appendChild(removeButton);
-            }
+            const removeButton = document.createElement("button");
+            removeButton.classList.add("remove-car");
+            removeButton.innerText = "Remove";
+            removeButton.onclick = () => removeCarFromParking(car.licensePlate);
+            buttonContainer.appendChild(removeButton);
+            carMeta.appendChild(entryTime);
+            carMeta.appendChild(feeDue);
+            carMeta.appendChild(buttonContainer);
             li.appendChild(carInfo);
             li.appendChild(carMeta);
             carList.appendChild(li);
+        });
+        carList.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            const draggingItem = document.querySelector(".dragging");
+            const afterElement = getDragAfterElement(carList, event.clientY);
+            if (afterElement == null) {
+                carList.appendChild(draggingItem);
+            }
+            else {
+                carList.insertBefore(draggingItem, afterElement);
+            }
         });
     }
     catch (error) {
         console.error("Error rendering car list:", error);
     }
+}
+function getDragAfterElement(container, y) {
+    const draggableElements = Array.from(container.querySelectorAll(".car-item:not(.dragging)"));
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        return offset < 0 && offset > closest.offset ? { offset, element: child } : closest;
+    }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
 }
 function goToPayment(licensePlate) {
     localStorage.setItem("selectedCar", licensePlate);

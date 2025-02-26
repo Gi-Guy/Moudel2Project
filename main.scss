@@ -73,6 +73,11 @@ button:hover {
     margin-bottom: 10px;
     display: flex;
     flex-direction: column;
+    cursor: grab;
+}
+.car-item.dragging {
+    opacity: 0.5;
+    background: #ddd;
 }
 
 .car-info {
@@ -85,6 +90,11 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+.car-meta .button-container {
+    display: flex;
+    gap: var(--spacing-sm);
 }
 
 .entry-time {
