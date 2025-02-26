@@ -250,7 +250,9 @@ export function renderCarList() {
             removeButton.onclick = () => removeCarFromParking(car.licensePlate);
             buttonContainer.appendChild(removeButton);
             carMeta.appendChild(entryTime);
-            carMeta.appendChild(feeDue);
+            if (car.feeDue > 0) {
+                carMeta.appendChild(feeDue);
+            }
             carMeta.appendChild(buttonContainer);
             li.appendChild(carInfo);
             li.appendChild(carMeta);

@@ -292,7 +292,9 @@ export function renderCarList(): void {
             buttonContainer.appendChild(removeButton);
 
             carMeta.appendChild(entryTime);
-            carMeta.appendChild(feeDue);
+            if (car.feeDue > 0) {
+                carMeta.appendChild(feeDue);
+            }
             carMeta.appendChild(buttonContainer);
 
             li.appendChild(carInfo);
