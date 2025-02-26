@@ -76,13 +76,17 @@ export function getParkingInfo() {
 }
 
 export function getCarList() {
-    return parkingLot.getCars().map(car => ({
-        licensePlate: car.getLicensePlate(),
-        owner: car.getOwner() || "Unknown",
-        entryTime: car.getEntryTime(),
-        feeDue: calculateParkingFee(car.getEntryTime())
-    }));
+    return parkingLot.getCars().map(car => {
+        const isSubscribed = subscriptions.getSubscriptions().some(sub => sub.getLicensePlate() === car.getLicensePlate());
+        return {
+            licensePlate: car.getLicensePlate(),
+            owner: car.getOwner() || "Unknown",
+            entryTime: car.getEntryTime(),
+            feeDue: isSubscribed ? 0 : calculateParkingFee(car.getEntryTime())
+        };
+    });
 }
+
 export function getSubscriptionList() {
     return subscriptions.getSubscriptions().map(sub => ({
         licensePlate: sub.getLicensePlate(),
@@ -216,22 +220,30 @@ export function renderCarList(): void {
             console.error("Element #carList not found!");
             return;
         }
-        
+
         carList.innerHTML = "";
-        
+
         const cars = getCarList();
         if (cars.length === 0) {
             carList.innerHTML = "<li>No cars in the parking lot.</li>";
             return;
         }
-        
+
         cars.forEach(car => {
             const li = document.createElement("li");
             li.classList.add("car-item");
 
+            if (car.feeDue === 0) {
+                li.classList.add("subscribed-car"); // הוספת מחלקה לרכבים מנויים
+            }
+
             const carInfo = document.createElement("div");
             carInfo.classList.add("car-info");
             carInfo.innerHTML = `<strong>${car.licensePlate}</strong> - ${car.owner}`;
+
+            if (car.feeDue === 0) {
+                carInfo.innerHTML += ` <span class="subscription-badge">🔵 Subscribed</span>`;
+            }
 
             const carMeta = document.createElement("div");
             carMeta.classList.add("car-meta");
@@ -261,6 +273,7 @@ export function renderCarList(): void {
         console.error("Error rendering car list:", error);
     }
 }
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
