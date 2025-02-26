@@ -1,6 +1,7 @@
 :root {
     --primary-color: #007bff;
     --background-color: #f4f4f4;
+    --background-car: white;
     --text-color: #333;
     --button-bg: blue;
     --button-payment-bg: green;
@@ -75,6 +76,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     cursor: grab;
+    background: var(--background-car);
 }
 .car-item.dragging {
     opacity: 0.5;
